@@ -452,7 +452,7 @@ sys_pipe(void)
 
 int
 sys_lseek(void){ // off_t lseek(int fd, off_t offset, int whence);
-	int fd, offset, whence;
+	int offset, whence;
 	struct file *f;
 	// get argument
 	//	RETURN VALUE: On success 0, error -1
