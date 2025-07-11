@@ -21,14 +21,21 @@
 static int
 argfd(int n, int *pfd, struct file **pf)
 {
+	// argint + get struct file
   int fd;
   struct file *f;
 
   if(argint(n, &fd) < 0)
     return -1;
   if(fd < 0 || fd >= NOFILE || (f=myproc()->ofile[fd]) == 0)
+	  // NOFILE: open files per process (16)
     return -1;
-  if(pfd)
+
+	//	struct proc: per-process state -> struct file *ofile[]: open files
+	// 	struct proc *myproc(void);
+	// 	(f = (myproc()->ofile[fd])) == NULL
+
+  if(pfd) // not NULL
     *pfd = fd;
   if(pf)
     *pf = f;
@@ -441,4 +448,46 @@ sys_pipe(void)
   fd[0] = fd0;
   fd[1] = fd1;
   return 0;
+}
+
+int
+sys_lseek(void){ // off_t lseek(int fd, off_t offset, int whence);
+	int fd, offset, whence;
+	struct file *f;
+	// get argument
+	//	RETURN VALUE: On success 0, error -1
+	if (argfd(0, 0, &f) < 0 || argint(1, &offset) < 0 || argint(2, &whence) < 0)
+		return -1;
+	
+	uint size = f->ip->size;
+	int new_offset;
+
+	// if-else
+	if (whence == SEEK_SET){
+		new_offset = offset;
+	} else if (whence == SEEK_CUR){
+		new_offset = (int)f->off + offset;
+	} else if (whence == SEEK_END){
+		new_offset = (int)size + offset;
+	} else
+		return -1;
+	/* switch
+	switch (whence){
+		case SEEK_SET:
+			new_offset = offset;
+			break;
+		case SEEK_CUR:
+			new_offset = (int)f->off + offset;
+			break;
+		case SEEK_END:
+			new_offset = (int)size + offset;
+			break;
+		default:
+			return -1;
+	}
+	*/
+	if (new_offset < 0 || new_offset > (int)size)
+		return -1;
+	
+	return (f->off = (uint)new_offset);
 }
