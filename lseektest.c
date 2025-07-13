@@ -4,7 +4,7 @@
 #include "fcntl.h"
 #include "fs.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 256
 int main(int argc, char *argv[]){
 	int fd;
 	if (argc != 4){
@@ -17,13 +17,13 @@ int main(int argc, char *argv[]){
 		exit();
 	}
 	// fstat
-	struct stat *fs = {0};
-	if (fstat(fd, fs) < 0){
+	struct stat fs;
+	if (fstat(fd, &fs) < 0){
 		printf(2, "Error: fstat error\n");
 		close(fd);
 		exit();
 	}
-	uint size= fs->size;
+	uint size= fs.size;
 	// read the file
 	char buf[BUFFER_SIZE];
 	if (lseek(fd, (int)0, SEEK_SET) < 0){
