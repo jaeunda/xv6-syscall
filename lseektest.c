@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
 	}
 	// after: fstat
 	struct stat new_fs;
-	if (fstat(fd, &new_fs) < ){
+	if (fstat(fd, &new_fs) < 0){
 		printf(2, "Error: fstat error\n");
 		close(fd);
 		exit();
