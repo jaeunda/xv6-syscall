@@ -451,15 +451,18 @@ sys_pipe(void)
 }
 
 int
-sys_lseek(void){ // off_t lseek(int fd, off_t offset, int whence);
+sys_lseek(void){ // int lseek(int fd, int offset, int whence);
 	int offset, whence;
 	struct file *f;
 	// get argument
-	//	RETURN VALUE: On success 0, error -1
-	if (argfd(0, 0, &f) < 0 || argint(1, &offset) < 0 || argint(2, &whence) < 0)
+	//	RETURN VALUE: On success new_offset, error -1
+	if (argfd(0, (int *)0, &f) < 0 || argint(1, &offset) < 0 || argint(2, &whence) < 0)
 		return -1;
 	
-	uint size = f->ip->size;
+	if (f->type != FD_INODE)
+		return -1;
+
+	int size = (uint) f->ip->size;
 	int new_offset;
 
 	// if-else
@@ -468,7 +471,7 @@ sys_lseek(void){ // off_t lseek(int fd, off_t offset, int whence);
 	} else if (whence == SEEK_CUR){
 		new_offset = (int)f->off + offset;
 	} else if (whence == SEEK_END){
-		new_offset = (int)size + offset;
+		new_offset = size + offset;
 	} else
 		return -1;
 	/* switch
@@ -480,14 +483,15 @@ sys_lseek(void){ // off_t lseek(int fd, off_t offset, int whence);
 			new_offset = (int)f->off + offset;
 			break;
 		case SEEK_END:
-			new_offset = (int)size + offset;
+			new_offset = size + offset;
 			break;
 		default:
 			return -1;
 	}
 	*/
-	if (new_offset < 0 || new_offset > (int)size)
+	if (new_offset < 0)
 		return -1;
 	
-	return (f->off = (uint)new_offset);
+	f->off = (uint)new_offset;
+	return new_offset;
 }
