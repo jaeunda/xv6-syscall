@@ -1,35 +1,34 @@
 ## xv6-syscall
-This `xv6-syscall` repository is an extended version of the standard xv6 operating system,
-now including the `lseek` system call implementation and a dedicated test program (`lseektest`).
 
 ### FEATURES
 #### 1. `lseek` System Call
-**NAME**
-    lseek - reposition read/write file offset
-**FUNCTION SIGNATURE**
-    `int lseek(int fd, int offset, int whence);`
-**ARGUMENTS**
-    `fd`: The file descriptor
-    `offset`: The value to move the file offset by
-    `whence`: Specifies the starting point for the offset.
-        `SEEK_SET`: Offset is set to `offset` bytes from the beginning of the file.
-        `SEEK_CUR`: Offset is set to its current position plus `offset`.
-        `SEEK_END`: Offset is set to the file size plus `offset`.
+###### NAME
+- lseek - reposition read/write file offset   
+###### FUNCTION SIGNATURE
+- `int lseek(int fd, int offset, int whence);` 
+###### ARGUMENTS
+- `fd`: The file descriptor
+- `offset`: The value to move the file offset by
+- `whence`: Specifies the starting point for the offset.
+    - `SEEK_SET`: Offset is set to `offset` bytes from the beginning of the file.
+    - `SEEK_CUR`: Offset is set to its current position plus `offset`.
+    - `SEEK_END`: Offset is set to the file size plus `offset`.
 #### 2. `lseektest` Command for Testing `lseek` System Call
-**NAME**
-    lseektest - modify file content from a specified offset
-**USAGE**
-    `lseektest <filename> <offset> <string>`
-**ARGUMENTS**
-    `<filename>`: The name of the file to be modified.
-    `<offset>`: The byte position within the file where the replacement of content shall begin.
-    `<string>`: The string to be written into the file.
-**EXAMPLES**
-    To change "Hello SSU" in 'hello.txt' to "Hello World":
-        `lseektest hello.txt 6 World`
+###### NAME
+- lseektest - modify file content from a specified offset
+###### USAGE
+- `lseektest <filename> <offset> <string>`
+###### ARGUMENTS
+- `<filename>`: The name of the file to be modified.
+- `<offset>`: The byte position within the file where the replacement of content shall begin.
+- `<string>`: The string to be written into the file.
+###### EXAMPLES
+- To change "Hello SSU" in 'hello.txt' to "Hello World":
+
+      `lseektest hello.txt 6 World`
 
 ---
-
+```
 NOTE: we have stopped maintaining the x86 version of xv6, and switched
 our efforts to the RISC-V version
 (https://github.com/mit-pdos/xv6-riscv.git)
@@ -81,3 +80,4 @@ will need to install a cross-compiler gcc suite capable of producing
 x86 ELF binaries (see https://pdos.csail.mit.edu/6.828/).
 Then run "make TOOLPREFIX=i386-jos-elf-". Now install the QEMU PC
 simulator and run "make qemu".
+```
